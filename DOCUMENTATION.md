@@ -47,7 +47,7 @@ A modern Progressive Web Application (PWA) for library management built with Nex
 ## Architecture
 
 ### Project Structure
-\`\`\`
+```
 library-pwa/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (proxy, captcha)
@@ -70,7 +70,7 @@ library-pwa/
 ├── hooks/                # Custom React hooks
 ├── public/               # Static assets
 └── styles/               # Additional styles
-\`\`\`
+```
 
 ### Data Flow
 1. **Authentication**: User logs in → CSRF token obtained → Stored in context
@@ -90,40 +90,40 @@ library-pwa/
 ### Installation Steps
 
 1. **Clone the repository**
-\`\`\`bash
+```bash
 git clone <repository-url>
 cd library-pwa
-\`\`\`
+```
 
 2. **Install dependencies**
-\`\`\`bash
+```bash
 npm install
 # or
 yarn install
-\`\`\`
+```
 
 3. **Environment setup**
-\`\`\`bash
+```bash
 cp .env.example .env.local
-\`\`\`
+```
 
 4. **Configure environment variables** (see Environment Configuration section)
 
 5. **Start development server**
-\`\`\`bash
+```bash
 npm run dev
 # or
 yarn dev
-\`\`\`
+```
 
 6. **Access the application**
 Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Build for Production
-\`\`\`bash
+```bash
 npm run build
 npm start
-\`\`\`
+```
 
 ---
 
@@ -133,14 +133,14 @@ npm start
 
 Create a `.env.local` file in the root directory:
 
-\`\`\`env
+```env
 # API Configuration (REQUIRED)
 NEXT_PUBLIC_LIBRARY_API_URL=https://your-api-domain.com
 
 # Application Configuration (OPTIONAL)
 NEXT_PUBLIC_APP_NAME=Library Management System
 NEXT_PUBLIC_APP_VERSION=1.0.0
-\`\`\`
+```
 
 ### Environment Variables Explained
 
@@ -154,7 +154,7 @@ NEXT_PUBLIC_APP_VERSION=1.0.0
 
 The application uses a centralized configuration system in `lib/config.ts`:
 
-\`\`\`typescript
+```typescript
 // Example configuration access
 import { API_CONFIG, APP_CONFIG } from '@/lib/config'
 
@@ -165,7 +165,7 @@ const baseUrl = API_CONFIG.BASE_URL
 // App settings
 const appName = APP_CONFIG.NAME
 const sessionDuration = APP_CONFIG.SESSION.DURATION
-\`\`\`
+```
 
 ---
 
@@ -185,31 +185,31 @@ The application uses a layered API architecture:
 #### Authentication Endpoints
 
 **Login**
-\`\`\`typescript
+```typescript
 await libraryAPI.login(username: string, password: string, sessionId: string)
-\`\`\`
+```
 - **Endpoint**: `/web/user/login`
 - **Method**: POST
 - **Returns**: `LoginResponse` with user data and CSRF token
 
 **Logout**
-\`\`\`typescript
+```typescript
 await libraryAPI.logout(sessionId?: string)
-\`\`\`
+```
 - **Endpoint**: `/web/user/logout`
 - **Method**: POST
 - **Returns**: void
 
 **Session Verification**
-\`\`\`typescript
+```typescript
 await libraryAPI.verifySession(sessionId: string)
-\`\`\`
+```
 - **Returns**: boolean indicating session validity
 
 #### Book Management Endpoints
 
 **Get Books**
-\`\`\`typescript
+```typescript
 await libraryAPI.getBooks(params?: {
   search?: string
   searchField?: "title" | "author" | "isbn" | "all"
@@ -219,23 +219,23 @@ await libraryAPI.getBooks(params?: {
   limit?: number
   offset?: number
 })
-\`\`\`
+```
 - **Endpoint**: `/web/jsonapi/lmsbook/lmsbook`
 - **Method**: GET
 - **Returns**: `Book[]`
 
 **Get Book Details**
-\`\`\`typescript
+```typescript
 await libraryAPI.getBookDetails(bookId: string)
-\`\`\`
+```
 - **Endpoint**: `/web/lmsbook/{id}`
 - **Method**: GET
 - **Returns**: `Book`
 
 **Reserve Book**
-\`\`\`typescript
+```typescript
 await libraryAPI.reserveBook(bookId: string)
-\`\`\`
+```
 - **Endpoint**: `/web/entity/requestedlmsbook`
 - **Method**: POST
 - **Returns**: Reservation result with success status
@@ -243,49 +243,49 @@ await libraryAPI.reserveBook(bookId: string)
 #### User Management Endpoints
 
 **Get User Profile**
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserProfile()
-\`\`\`
+```
 - **Endpoint**: `/web/user/{uid}`
 - **Method**: GET
 - **Returns**: `UserProfile`
 
 **Get Borrowed Books**
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserBorrowedBooks()
-\`\`\`
+```
 - **Endpoint**: `/web/borrowed/{uid}`
 - **Method**: GET
 - **Returns**: `BorrowedBook[]`
 
 **Get Requested Books**
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserRequestedBooks()
-\`\`\`
+```
 - **Endpoint**: `/web/requested/{uid}`
 - **Method**: GET
 - **Returns**: `RequestedBook[]`
 
 **Check Borrowing Eligibility**
-\`\`\`typescript
+```typescript
 await libraryAPI.checkBorrowingEligibility()
-\`\`\`
+```
 - **Returns**: Eligibility status with current limits
 
 #### Metadata Endpoints
 
 **Get Authors**
-\`\`\`typescript
+```typescript
 await libraryAPI.getAuthors()
-\`\`\`
+```
 - **Endpoint**: `/web/jsonapi/lmsbookauthor/lmsbookauthor`
 - **Method**: GET
 - **Returns**: `Author[]`
 
 **Get Categories**
-\`\`\`typescript
+```typescript
 await libraryAPI.getCategoriesList()
-\`\`\`
+```
 - **Endpoint**: `/web/jsonapi/taxonomy_term/lmsbook_category`
 - **Method**: GET
 - **Returns**: `string[]`
@@ -294,7 +294,7 @@ await libraryAPI.getCategoriesList()
 
 #### Core Interfaces
 
-\`\`\`typescript
+```typescript
 interface Book {
   id: string
   title: string
@@ -346,13 +346,13 @@ interface RequestedBook {
   issued_on: string
   returned_on: string
 }
-\`\`\`
+```
 
 ### Error Handling
 
 The API uses a custom `ApiError` class:
 
-\`\`\`typescript
+```typescript
 class ApiError extends Error {
   constructor(message: string, public status: number) {
     super(message)
@@ -367,12 +367,12 @@ try {
     console.error(`API Error ${error.status}: ${error.message}`)
   }
 }
-\`\`\`
+```
 
 ### API Usage Examples
 
 #### Basic Book Search
-\`\`\`typescript
+```typescript
 import { libraryAPI } from '@/lib/api'
 
 // Search for books
@@ -388,10 +388,10 @@ const fictionBooks = await libraryAPI.getBooks({
   category: "Fiction",
   limit: 20
 })
-\`\`\`
+```
 
 #### User Operations
-\`\`\`typescript
+```typescript
 // Get user's borrowed books
 const borrowedBooks = await libraryAPI.getUserBorrowedBooks()
 
@@ -401,10 +401,10 @@ if (eligibility.can_borrow) {
   // User can borrow more books
   await libraryAPI.reserveBook(bookId)
 }
-\`\`\`
+```
 
 #### Authentication Flow
-\`\`\`typescript
+```typescript
 // Login
 const loginResult = await libraryAPI.login(username, password, sessionId)
 if (loginResult.current_user) {
@@ -414,7 +414,7 @@ if (loginResult.current_user) {
 
 // Logout
 await libraryAPI.logout()
-\`\`\`
+```
 
 ---
 
@@ -432,7 +432,7 @@ Central authentication state management using React Context.
 - Activity tracking
 
 **Usage:**
-\`\`\`typescript
+```typescript
 import { useAuth } from '@/components/auth/auth-context'
 
 function MyComponent() {
@@ -444,7 +444,7 @@ function MyComponent() {
   
   return <Dashboard />
 }
-\`\`\`
+```
 
 #### LoginForm (`components/auth/login-form.tsx`)
 Complete login interface with security verification.
@@ -479,7 +479,7 @@ Main book search and browsing interface.
 - Responsive design
 
 **Key Methods:**
-\`\`\`typescript
+```typescript
 // Search books
 const searchBooks = async (newPage = 1) => {
   // Implementation
@@ -489,7 +489,7 @@ const searchBooks = async (newPage = 1) => {
 const handleReserve = async (bookId: string) => {
   // Implementation
 }
-\`\`\`
+```
 
 #### BookDetailsModal (`components/dashboard/book-details-modal.tsx`)
 Detailed book information modal.
@@ -547,13 +547,13 @@ The application uses a comprehensive set of reusable UI components based on Radi
 QR code generation and display.
 
 **Usage:**
-\`\`\`typescript
+```typescript
 <QRCode 
   value={JSON.stringify(reservationData)} 
   size={200} 
   className="border rounded"
 />
-\`\`\`
+```
 
 #### CalendarReminderModal (`components/dashboard/calendar-reminder-modal.tsx`)
 Calendar reminder generation for due dates.
@@ -598,7 +598,7 @@ Calendar reminder generation for due dates.
 
 ### Authentication Configuration
 
-\`\`\`typescript
+```typescript
 // Session configuration in lib/config.ts
 export const APP_CONFIG = {
   SESSION: {
@@ -607,7 +607,7 @@ export const APP_CONFIG = {
     CHECK_INTERVAL: 30 * 1000,       // Check every 30 seconds
   }
 }
-\`\`\`
+```
 
 ---
 
@@ -626,19 +626,19 @@ The application integrates with a Drupal-based library management system through
 
 #### Data Caching Strategy
 
-\`\`\`typescript
+```typescript
 // Caching implementation in LibraryAPI class
 private authorsCache: Map<string, Author> = new Map()
 private publicationsCache: Map<string, Publication> = new Map()
 private categoriesCache: Map<string, Category> = new Map()
 private imageCache: Map<string, string> = new Map()
-\`\`\`
+```
 
 #### Data Transformation
 
 The application transforms Drupal field arrays into usable objects:
 
-\`\`\`typescript
+```typescript
 private parseAuthorData(authorData: any): Author {
   const getValue = (field: any) => {
     if (!field || !Array.isArray(field) || field.length === 0) return ""
@@ -652,7 +652,7 @@ private parseAuthorData(authorData: any): Author {
     created: getValue(authorData.created),
   }
 }
-\`\`\`
+```
 
 ---
 
@@ -711,7 +711,7 @@ private parseAuthorData(authorData: any): Author {
 ### Environment Setup
 
 #### Production Environment Variables
-\`\`\`env
+```env
 # Production API URL
 NEXT_PUBLIC_LIBRARY_API_URL=https://production-api.domain.com
 
@@ -721,12 +721,12 @@ NEXT_PUBLIC_APP_VERSION=1.0.0
 
 # Optional: Analytics and monitoring
 NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
-\`\`\`
+```
 
 ### Build Process
 
 #### Local Build
-\`\`\`bash
+```bash
 # Install dependencies
 npm install
 
@@ -735,10 +735,10 @@ npm run build
 
 # Start production server
 npm start
-\`\`\`
+```
 
 #### Docker Deployment
-\`\`\`dockerfile
+```dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
@@ -750,7 +750,7 @@ RUN npm run build
 
 EXPOSE 3000
 CMD ["npm", "start"]
-\`\`\`
+```
 
 ### Deployment Platforms
 
@@ -842,7 +842,7 @@ Access the debug panel in development mode:
 
 #### Console Logging
 Enable detailed logging:
-\`\`\`typescript
+```typescript
 // In lib/config.ts
 export const DEBUG = {
   ENABLED: true,
@@ -850,7 +850,7 @@ export const DEBUG = {
   LOG_AUTH_EVENTS: true,
   LOG_SESSION_EVENTS: true,
 }
-\`\`\`
+```
 
 #### Network Monitoring
 Monitor API requests in browser DevTools:
@@ -886,13 +886,13 @@ Monitor API requests in browser DevTools:
 
 #### Error Monitoring
 Set up error tracking:
-\`\`\`typescript
+```typescript
 // Example error tracking
 window.addEventListener('error', (event) => {
   console.error('Global error:', event.error)
   // Send to monitoring service
 })
-\`\`\`
+```
 
 #### Performance Monitoring
 Monitor key metrics:
@@ -914,7 +914,7 @@ Monitor key metrics:
 - [ ] XSS prevention
 
 #### Dependency Management
-\`\`\`bash
+```bash
 # Check for security vulnerabilities
 npm audit
 
@@ -923,7 +923,7 @@ npm audit fix
 
 # Update dependencies
 npm update
-\`\`\`
+```
 
 ### Backup and Recovery
 
@@ -959,7 +959,7 @@ npm update
 ## API Reference Quick Guide
 
 ### Authentication
-\`\`\`typescript
+```typescript
 // Login
 await libraryAPI.login(username, password, sessionId)
 
@@ -968,10 +968,10 @@ await libraryAPI.logout()
 
 // Check session
 await libraryAPI.verifySession(sessionId)
-\`\`\`
+```
 
 ### Books
-\`\`\`typescript
+```typescript
 // Get books
 await libraryAPI.getBooks({ search, category, page, limit })
 
@@ -980,10 +980,10 @@ await libraryAPI.getBookDetails(bookId)
 
 // Reserve book
 await libraryAPI.reserveBook(bookId)
-\`\`\`
+```
 
 ### User Data
-\`\`\`typescript
+```typescript
 // Get profile
 await libraryAPI.getUserProfile()
 
@@ -995,10 +995,10 @@ await libraryAPI.getUserRequestedBooks()
 
 // Check eligibility
 await libraryAPI.checkBorrowingEligibility()
-\`\`\`
+```
 
 ### Metadata
-\`\`\`typescript
+```typescript
 // Get categories
 await libraryAPI.getCategoriesList()
 
@@ -1007,7 +1007,7 @@ await libraryAPI.getAuthors()
 
 // Get publications
 await libraryAPI.getPublications()
-\`\`\`
+```
 
 ---
 
