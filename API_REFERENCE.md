@@ -7,39 +7,39 @@ This document provides a comprehensive reference for all API endpoints, data str
 ## Base Configuration
 
 ### Environment Setup
-\`\`\`env
+```env
 NEXT_PUBLIC_LIBRARY_API_URL=https://your-api-domain.com
-\`\`\`
+```
 
 ### API Client Initialization
-\`\`\`typescript
+```typescript
 import { libraryAPI } from '@/lib/api'
 
 // The API client is automatically configured with the base URL
 // and handles authentication, caching, and error handling
-\`\`\`
+```
 
 ## Authentication APIs
 
 ### Login
 Authenticate user and establish session.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.login(username: string, password: string, sessionId: string)
-\`\`\`
+```
 
 **Endpoint**: `POST /web/user/login`
 
 **Request Body**:
-\`\`\`json
+```json
 {
   "name": "username",
   "pass": "password"
 }
-\`\`\`
+```
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface LoginResponse {
   current_user: {
     uid: string
@@ -48,10 +48,10 @@ interface LoginResponse {
   csrf_token: string
   logout_token: string
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 try {
   const result = await libraryAPI.login('john_doe', 'password123', 'session_123')
   console.log('Logged in as:', result.current_user.name)
@@ -59,51 +59,51 @@ try {
 } catch (error) {
   console.error('Login failed:', error.message)
 }
-\`\`\`
+```
 
 ### Logout
 End user session and cleanup.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.logout(sessionId?: string)
-\`\`\`
+```
 
 **Endpoint**: `POST /web/user/logout`
 
 **Example**:
-\`\`\`typescript
+```typescript
 await libraryAPI.logout()
 // All cached data and tokens are cleared
-\`\`\`
+```
 
 ### Session Verification
 Check if current session is valid.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.verifySession(sessionId: string): Promise<boolean>
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const isValid = await libraryAPI.verifySession('session_123')
 if (!isValid) {
   // Redirect to login
 }
-\`\`\`
+```
 
 ## Book Management APIs
 
 ### Get Books
 Retrieve books with optional filtering and pagination.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getBooks(params?: GetBooksParams): Promise<Book[]>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/jsonapi/lmsbook/lmsbook`
 
 **Parameters**:
-\`\`\`typescript
+```typescript
 interface GetBooksParams {
   search?: string                                    // Search term
   searchField?: "title" | "author" | "isbn" | "all" // Search field
@@ -113,10 +113,10 @@ interface GetBooksParams {
   limit?: number                                     // Items per page (default: 12)
   offset?: number                                    // Offset for pagination
 }
-\`\`\`
+```
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface Book {
   id: string
   title: string
@@ -133,11 +133,11 @@ interface Book {
   books_issued?: number
   featured_image?: string
 }
-\`\`\`
+```
 
 **Examples**:
 
-\`\`\`typescript
+```typescript
 // Basic search
 const books = await libraryAPI.getBooks({
   search: "javascript",
@@ -165,35 +165,35 @@ const books = await libraryAPI.getBooks({
   page: 2,
   limit: 15
 })
-\`\`\`
+```
 
 ### Get Book Details
 Retrieve detailed information for a specific book.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getBookDetails(bookId: string): Promise<Book>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/lmsbook/{id}`
 
 **Example**:
-\`\`\`typescript
+```typescript
 const book = await libraryAPI.getBookDetails('123')
 console.log('Book title:', book.title)
 console.log('Available copies:', book.books_available)
-\`\`\`
+```
 
 ### Reserve Book
 Create a reservation for a book.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.reserveBook(bookId: string): Promise<ReservationResult>
-\`\`\`
+```
 
 **Endpoint**: `POST /web/entity/requestedlmsbook`
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface ReservationResult {
   success: boolean
   message: string
@@ -207,10 +207,10 @@ interface ReservationResult {
     status: "active" | "expired" | "collected"
   }
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 try {
   const result = await libraryAPI.reserveBook('book_123')
   if (result.success) {
@@ -222,21 +222,21 @@ try {
 } catch (error) {
   console.error('Reservation error:', error.message)
 }
-\`\`\`
+```
 
 ## User Management APIs
 
 ### Get User Profile
 Retrieve current user's profile information.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserProfile(): Promise<UserProfile>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/user/{uid}`
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface UserProfile {
   uid: string
   uuid: string
@@ -252,27 +252,27 @@ interface UserProfile {
   max_books_allowed: number
   can_borrow_more: boolean
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const profile = await libraryAPI.getUserProfile()
 console.log('User:', profile.name)
 console.log('Books borrowed:', profile.borrowed_books_count)
 console.log('Can borrow more:', profile.can_borrow_more)
-\`\`\`
+```
 
 ### Get Borrowed Books
 Retrieve user's currently borrowed books.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserBorrowedBooks(): Promise<BorrowedBook[]>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/borrowed/{uid}`
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface BorrowedBook {
   id: string
   title: string
@@ -285,10 +285,10 @@ interface BorrowedBook {
   status: "requested" | "issued" | "returned"
   is_overdue: boolean
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const borrowedBooks = await libraryAPI.getUserBorrowedBooks()
 
 borrowedBooks.forEach(book => {
@@ -299,19 +299,19 @@ borrowedBooks.forEach(book => {
     console.log(`📅 Due in ${book.days_remaining} days`)
   }
 })
-\`\`\`
+```
 
 ### Get Requested Books
 Retrieve user's book requests/reservations.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getUserRequestedBooks(): Promise<RequestedBook[]>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/requested/{uid}`
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface RequestedBook {
   id: string
   title: string
@@ -320,37 +320,37 @@ interface RequestedBook {
   issued_on: string
   returned_on: string
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const requestedBooks = await libraryAPI.getUserRequestedBooks()
 
 requestedBooks.forEach(book => {
   const status = book.issued_on !== "Not issued yet" ? "Approved" : "Pending"
   console.log(`${book.bookname}: ${status}`)
 })
-\`\`\`
+```
 
 ### Check Borrowing Eligibility
 Check if user can borrow more books.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.checkBorrowingEligibility(): Promise<EligibilityResult>
-\`\`\`
+```
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface EligibilityResult {
   can_borrow: boolean
   current_books: number
   max_books: number
   message: string
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const eligibility = await libraryAPI.checkBorrowingEligibility()
 
 if (eligibility.can_borrow) {
@@ -360,37 +360,37 @@ if (eligibility.can_borrow) {
   console.log(`❌ ${eligibility.message}`)
   // Disable reserve button
 }
-\`\`\`
+```
 
 ## Metadata APIs
 
 ### Get Categories
 Retrieve list of book categories.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getCategoriesList(): Promise<string[]>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/jsonapi/taxonomy_term/lmsbook_category`
 
 **Example**:
-\`\`\`typescript
+```typescript
 const categories = await libraryAPI.getCategoriesList()
 console.log('Available categories:', categories)
 // Output: ["Fiction", "Science", "History", "Technology", ...]
-\`\`\`
+```
 
 ### Get Authors
 Retrieve list of authors.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getAuthors(): Promise<Author[]>
-\`\`\`
+```
 
 **Endpoint**: `GET /web/jsonapi/lmsbookauthor/lmsbookauthor`
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface Author {
   id: string
   uuid: string
@@ -398,48 +398,48 @@ interface Author {
   description: string
   created: string
 }
-\`\`\`
+```
 
 **Example**:
-\`\`\`typescript
+```typescript
 const authors = await libraryAPI.getAuthors()
 authors.forEach(author => {
   console.log(`${author.title} (ID: ${author.id})`)
 })
-\`\`\`
+```
 
 ### Get Publications
 Retrieve list of publications/publishers.
 
-\`\`\`typescript
+```typescript
 await libraryAPI.getPublications(): Promise<Publication[]>
-\`\`\`
+```
 
 **Response**:
-\`\`\`typescript
+```typescript
 interface Publication {
   id: string
   title: string
   description: string
 }
-\`\`\`
+```
 
 ## Error Handling
 
 ### API Error Class
 All API methods throw `ApiError` instances on failure.
 
-\`\`\`typescript
+```typescript
 class ApiError extends Error {
   constructor(message: string, public status: number) {
     super(message)
   }
 }
-\`\`\`
+```
 
 ### Error Handling Patterns
 
-\`\`\`typescript
+```typescript
 // Basic error handling
 try {
   const books = await libraryAPI.getBooks()
@@ -477,7 +477,7 @@ try {
     showErrorMessage('Unable to reserve book. Please try again.')
   }
 }
-\`\`\`
+```
 
 ## Caching and Performance
 
@@ -489,26 +489,26 @@ The API client automatically caches:
 - Featured images
 
 ### Cache Management
-\`\`\`typescript
+```typescript
 // Caches are automatically managed, but you can force refresh by:
 await libraryAPI.logout() // Clears all caches
 await libraryAPI.login(username, password, sessionId) // Rebuilds caches
-\`\`\`
+```
 
 ### Performance Optimization
-\`\`\`typescript
+```typescript
 // Load books with metadata in parallel
 const [books, categories, authors] = await Promise.all([
   libraryAPI.getBooks({ limit: 20 }),
   libraryAPI.getCategoriesList(),
   libraryAPI.getAuthors()
 ])
-\`\`\`
+```
 
 ## Rate Limiting and Best Practices
 
 ### Request Patterns
-\`\`\`typescript
+```typescript
 // ✅ Good: Batch operations
 const bookIds = ['1', '2', '3', '4', '5']
 const books = await Promise.all(
@@ -519,10 +519,10 @@ const books = await Promise.all(
 for (const id of bookIds) {
   const book = await libraryAPI.getBookDetails(id) // Slow!
 }
-\`\`\`
+```
 
 ### Pagination Best Practices
-\`\`\`typescript
+```typescript
 // Implement efficient pagination
 const loadMoreBooks = async (page: number) => {
   const books = await libraryAPI.getBooks({
@@ -538,10 +538,10 @@ const loadMoreBooks = async (page: number) => {
     setBooks(prev => [...prev, ...books])
   }
 }
-\`\`\`
+```
 
 ### Search Optimization
-\`\`\`typescript
+```typescript
 // Debounce search requests
 import { debounce } from 'lodash'
 
@@ -554,12 +554,12 @@ const debouncedSearch = debounce(async (searchTerm: string) => {
     setSuggestions(books)
   }
 }, 300)
-\`\`\`
+```
 
 ## Integration Examples
 
 ### React Component Integration
-\`\`\`typescript
+```typescript
 import { useEffect, useState } from 'react'
 import { libraryAPI, Book } from '@/lib/api'
 
@@ -599,10 +599,10 @@ function BookList() {
     </div>
   )
 }
-\`\`\`
+```
 
 ### Search Implementation
-\`\`\`typescript
+```typescript
 function BookSearch() {
   const [searchTerm, setSearchTerm] = useState('')
   const [books, setBooks] = useState<Book[]>([])
@@ -648,10 +648,10 @@ function BookSearch() {
     </div>
   )
 }
-\`\`\`
+```
 
 ### Reservation Flow
-\`\`\`typescript
+```typescript
 function BookReservation({ bookId }: { bookId: string }) {
   const [reserving, setReserving] = useState(false)
 
@@ -690,12 +690,12 @@ function BookReservation({ bookId }: { bookId: string }) {
     </button>
   )
 }
-\`\`\`
+```
 
 ## Testing API Integration
 
 ### Mock API for Testing
-\`\`\`typescript
+```typescript
 // Create mock API for testing
 const mockLibraryAPI = {
   async getBooks(params) {
@@ -723,7 +723,7 @@ test('book reservation', async () => {
   const result = await mockLibraryAPI.reserveBook('1')
   expect(result.success).toBe(true)
 })
-\`\`\`
+```
 
 ### API Testing Checklist
 - [ ] Authentication flow works
