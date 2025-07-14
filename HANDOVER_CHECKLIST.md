@@ -73,7 +73,7 @@
 - **Package Manager**: npm
 
 ### Key Files and Directories
-\`\`\`
+```
 library-pwa/
 ├── app/                    # Next.js App Router
 ├── components/             # React components
@@ -84,20 +84,20 @@ library-pwa/
 ├── API_REFERENCE.md       # API documentation
 ├── DEPLOYMENT_GUIDE.md    # Deployment instructions
 └── package.json           # Dependencies and scripts
-\`\`\`
+```
 
 ### Environment Variables Required
-\`\`\`env
+```env
 # REQUIRED
 NEXT_PUBLIC_LIBRARY_API_URL=https://your-api-domain.com
 
 # OPTIONAL
 NEXT_PUBLIC_APP_NAME=Library Management System
 NEXT_PUBLIC_APP_VERSION=1.0.0
-\`\`\`
+```
 
 ### Development Commands
-\`\`\`bash
+```bash
 # Install dependencies
 npm install
 
@@ -115,7 +115,7 @@ npm run type-check
 
 # Linting
 npm run lint
-\`\`\`
+```
 
 ## 🚀 Deployment Information
 
@@ -181,7 +181,7 @@ npm run lint
 - **Quarterly**: Review and optimize performance
 
 ### Dependency Updates
-\`\`\`bash
+```bash
 # Check for updates
 npm outdated
 
@@ -191,7 +191,7 @@ npm update
 # Security audit
 npm audit
 npm audit fix
-\`\`\`
+```
 
 ### Common Issues and Solutions
 1. **Authentication Errors**: Check API credentials and CSRF tokens
